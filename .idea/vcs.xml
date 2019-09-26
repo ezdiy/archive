@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deflate/libdeflate" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/rar/dmc_unrar" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/sevenzip/7z" vcs="Git" />
+  </component>
+</project>
