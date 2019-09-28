@@ -3,14 +3,13 @@ package libarchive
 /*
 #include <archive.h>
 extern void setError(struct archive *a, const char *msg);
- */
+*/
 import "C"
 import (
 	"github.com/ezdiy/archive/util"
 	"io"
 	"unsafe"
 )
-
 
 //export seekFunc
 func seekFunc(arc *C.struct_archive, p unsafe.Pointer, off int64, whence int32) int64 {
@@ -24,7 +23,6 @@ func seekFunc(arc *C.struct_archive, p unsafe.Pointer, off int64, whence int32) 
 	}
 	return g
 }
-
 
 //export skipFunc
 func skipFunc(arc *C.struct_archive, p unsafe.Pointer, off int64) int64 {
@@ -50,5 +48,3 @@ func readFunc(arc *C.struct_archive, p unsafe.Pointer, buf **byte) int64 {
 	*buf = &a.ReadBuf[0]
 	return int64(got)
 }
-
-

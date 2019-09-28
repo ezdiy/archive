@@ -21,7 +21,7 @@ func readFunc(opaque, buffer unsafe.Pointer, n int) int {
 //export seekFunc
 func seekFunc(opaque unsafe.Pointer, offset int64) int {
 	ar := (*Reader)(opaque)
-	_,_ = ar.Rs.Seek(offset, io.SeekStart)
+	_, _ = ar.Rs.Seek(offset, io.SeekStart)
 	return 0
 }
 
@@ -30,7 +30,7 @@ func extractFunc(opaque unsafe.Pointer, buffer *unsafe.Pointer, size *C.size_t, 
 	ar := (*Reader)(opaque)
 	ar.ReadResp <- int(usize)
 	ar.ReadPending = false
-	req := <- ar.ReadReq
+	req := <-ar.ReadReq
 	if req == nil {
 		return false
 	}

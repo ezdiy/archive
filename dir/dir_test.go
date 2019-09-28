@@ -8,7 +8,7 @@ import (
 )
 
 func TestOpen(t *testing.T) {
-	a, err := archive.Open("e:/fullbook",nil)
+	a, err := archive.Open("e:/fullbook", nil)
 	if err != nil {
 		panic(err)
 	}
@@ -26,5 +26,3 @@ func TestOpen(t *testing.T) {
 	}
 	_ = a.Close()
 }
-
-

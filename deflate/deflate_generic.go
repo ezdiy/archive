@@ -13,7 +13,7 @@ type appendWriter struct {
 	buf []byte
 }
 
-func (a *appendWriter) Write(b []byte) (int,error) {
+func (a *appendWriter) Write(b []byte) (int, error) {
 	a.buf = append(a.buf, b...)
 	return len(b), nil
 }
@@ -30,7 +30,7 @@ func Compress(dst, input []byte, level int, z bool) []byte {
 	} else {
 		w, _ = flate.NewWriter(aw, level)
 	}
-	_,_ = w.Write(input)
+	_, _ = w.Write(input)
 	_ = w.Close()
 	return aw.buf
 }
@@ -45,6 +45,6 @@ func Decompress(dst, input []byte, z bool) []byte {
 		r = flate.NewReader(ri)
 	}
 	buf := bytes.NewBuffer(dst)
-	_,_ = buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	return buf.Bytes()
 }

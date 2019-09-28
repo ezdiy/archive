@@ -28,4 +28,3 @@ func TestRarOpen(t *testing.T) {
 	}
 	_ = a.Close()
 }
-

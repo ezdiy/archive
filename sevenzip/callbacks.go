@@ -1,4 +1,5 @@
 package sevenzip
+
 //#include "7z.h"
 import "C"
 import (
@@ -28,4 +29,3 @@ func seekCallback(pp unsafe.Pointer, pos *int64, origin int32) int32 {
 	}
 	return 0
 }
-

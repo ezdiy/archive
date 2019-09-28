@@ -22,7 +22,7 @@ extern SRes seekCallback(const ISeekInStream *p, Int64 *pos, ESzSeek origin);
 #undef kTopValue
 #undef kBitModelTotal
 #include "Bcj2.c"
- */
+*/
 import "C"
 import (
 	"github.com/ezdiy/archive"
@@ -132,10 +132,10 @@ func Open(input *io.Reader, opt *archive.Options) (reader archive.Reader, e erro
 	mtime := (*[math.MaxInt32]uint64)(tv)
 	for i := 0; i < int(s.NumFiles); i++ {
 		ent := archive.Header{
-			Name:string(utf16.Decode(names[nameOffsets[i]: nameOffsets[i+1]-1])),
-			IsDir:(isDirs[i/8]&byte(1<<uint(7-(i&7))))!=0,
-			Size:int64(offsets[i+1]- offsets[i]),
-			Index:i,
+			Name:  string(utf16.Decode(names[nameOffsets[i] : nameOffsets[i+1]-1])),
+			IsDir: (isDirs[i/8] & byte(1<<uint(7-(i&7)))) != 0,
+			Size:  int64(offsets[i+1] - offsets[i]),
+			Index: i,
 		}
 		if mtime != nil {
 			ent.Time = time.Unix(int64(mtime[i]/uint64(10000000))-11644473600, 0)

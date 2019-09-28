@@ -9,10 +9,9 @@ import (
 
 func SeekGetSize(input io.Seeker) (ret int64) {
 	ret, _ = input.Seek(0, io.SeekEnd)
-	_,_ = input.Seek(0,io.SeekStart)
+	_, _ = input.Seek(0, io.SeekStart)
 	return
 }
-
 
 func MakeReaderAt(input io.Reader, optSize *int64) (rat io.ReaderAt) {
 	rat = input.(io.ReaderAt)
@@ -50,18 +49,19 @@ func MakeReadSeeker(input io.Reader, size *int64) (rs io.ReadSeeker) {
 	return
 }
 
-const CantGetSizeHack = math.MaxInt64/2
+const CantGetSizeHack = math.MaxInt64 / 2
 
 type ReaderAtWrapper struct {
 	io.ReadSeeker
 }
+
 func (w *ReaderAtWrapper) ReadAt(p []byte, off int64) (n int, err error) {
 	save, _ := w.Seek(0, io.SeekCurrent)
 	if _, err = w.Seek(off, io.SeekStart); err != nil {
 		return
 	}
 	n, err = w.Read(p)
-	_,_ = w.Seek(save, io.SeekStart)
+	_, _ = w.Seek(save, io.SeekStart)
 	return
 }
 
@@ -95,7 +95,6 @@ func CheckMagic(input *io.Reader, magic string) (bool, error) {
 	}
 	return string(buf) == magic, nil
 }
-
 
 type RCDelegate struct {
 	io.Reader

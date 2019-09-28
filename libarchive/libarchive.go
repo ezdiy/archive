@@ -29,7 +29,8 @@ import (
 	"unsafe"
 )
 
-const ReadBufSize = 1<<18
+const ReadBufSize = 1 << 18
+
 type Reader struct {
 	ReadBuf [ReadBufSize]byte
 
@@ -40,9 +41,10 @@ type Reader struct {
 	Pos      int
 	SkipDirs bool
 
-	Size	int64
+	Size int64
 }
-const ifdir = 0O0040000
+
+const ifdir = 0o0040000
 
 func (entry *C.struct_archive_entry) getName(index int) string {
 	// Works for RAR (most of the time)
@@ -52,7 +54,7 @@ func (entry *C.struct_archive_entry) getName(index int) string {
 	// Works for 7z/zip (most of the time)
 	if p := C.archive_entry_pathname_w(entry); p != nil {
 		w := (*[math.MaxInt32]uint16)(unsafe.Pointer(p))
-		i := 0;
+		i := 0
 		for w[i] != 0 {
 			i++
 		}
@@ -67,7 +69,7 @@ func (entry *C.struct_archive_entry) getName(index int) string {
 	return fmt.Sprintf("(no name for file entry #%d due to broken libarchive locale handling)", index)
 }
 
-func (r *Reader) Next() (*archive.Header,error) {
+func (r *Reader) Next() (*archive.Header, error) {
 	if r.Arc == nil {
 		return nil, io.ErrClosedPipe
 	}
@@ -80,11 +82,11 @@ skipDir:
 	}
 	// ok got entry, fill it in
 	ent := &archive.Header{
-		Name:r.Entry.getName(r.Pos),
-		Size:int64(C.archive_entry_size(r.Entry)),
-		Time:time.Unix(int64(C.archive_entry_mtime(r.Entry)), 0),
-		Index:r.Pos,
-		IsDir:(C.archive_entry_filetype(r.Entry)& ifdir )!=0,
+		Name:  r.Entry.getName(r.Pos),
+		Size:  int64(C.archive_entry_size(r.Entry)),
+		Time:  time.Unix(int64(C.archive_entry_mtime(r.Entry)), 0),
+		Index: r.Pos,
+		IsDir: (C.archive_entry_filetype(r.Entry) & ifdir) != 0,
 	}
 	r.Pos++
 	if r.SkipDirs && ent.IsDir {
@@ -102,7 +104,7 @@ func (r *Reader) Close() error {
 	return nil
 }
 
-func (r *Reader) Read(b []byte) (int,error) {
+func (r *Reader) Read(b []byte) (int, error) {
 	if r.Arc == nil {
 		return 0, io.ErrClosedPipe
 	}
@@ -111,7 +113,7 @@ func (r *Reader) Read(b []byte) (int,error) {
 		return 0, io.EOF
 	}
 	if got < 0 {
-		return 0,r.Arc.getErr()
+		return 0, r.Arc.getErr()
 	}
 	return int(got), nil
 }

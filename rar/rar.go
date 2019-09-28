@@ -18,7 +18,7 @@ import (
 extern dmc_unrar_read_func readFunc;
 extern dmc_unrar_seek_func seekFunc;
 extern dmc_unrar_extract_callback_func extractFunc;
- */
+*/
 import "C"
 
 type Reader struct {
@@ -42,12 +42,12 @@ func (r *Reader) Next() (*archive.Header, error) {
 	return r.Current()
 }
 
-func (r *Reader) Read(b []byte) (int,error) {
+func (r *Reader) Read(b []byte) (int, error) {
 	if r.FPos == -1 || r.FList == nil {
 		return 0, io.EOF
 	}
 	r.ReadReq <- b
-	got := <- r.ReadResp
+	got := <-r.ReadResp
 	if got == -1 {
 		return 0, io.EOF
 	}
@@ -61,7 +61,7 @@ func (r *Reader) Close() error {
 	r.FPos = -1
 	r.FList = nil
 	r.ReadReq <- nil
-	ok := <- r.ReadResp
+	ok := <-r.ReadResp
 	if ok != math.MinInt32 {
 		panic("unable to terminate read worker")
 	}
@@ -86,7 +86,7 @@ func (r *Reader) readWorker() {
 				panic("readPending invariant")
 			}
 			r.ReadResp <- -int(err)
-		} else  if r.ReadPending {
+		} else if r.ReadPending {
 			// there's a pending reader, but it never got anything
 			r.ReadResp <- -1
 		}
@@ -123,11 +123,11 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 		name := string(nameBuf[:got]) // can be still empty on error?
 		isDir := bool(C.dmc_unrar_file_is_directory(a.Arc, C.size_t(i)))
 		a.FList = append(a.FList, archive.Header{
-			Size:int64(fi[i].file.uncompressed_size),
-			Time:time.Unix(int64(fi[i].file.unix_time),0),
-			Name:name,
-			IsDir:isDir,
-			Index:i,
+			Size:  int64(fi[i].file.uncompressed_size),
+			Time:  time.Unix(int64(fi[i].file.unix_time), 0),
+			Name:  name,
+			IsDir: isDir,
+			Index: i,
 		})
 	}
 	a.ReadReq = make(chan []byte)
@@ -140,4 +140,3 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 func init() {
 	archive.Formats = append(archive.Formats, Open)
 }
-

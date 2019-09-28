@@ -24,4 +24,3 @@ func TestZipOpen(t *testing.T) {
 	}
 	_ = a.Close()
 }
-

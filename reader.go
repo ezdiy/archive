@@ -9,11 +9,11 @@ import (
 
 // Header is returned per each file encountered in the stream, or in a List() if supported.
 type Header struct {
-	Name	string				// Path, including sub folders within the archive.
-	Size 	int64				// Size of the file, in bytes. If not known upfront, then -1.
-	Time 	time.Time			// Timestamp, typically ModTime.
-	Index 	int					// Index within the archive. For Seek(), if it works.
-	IsDir	bool				// If this is, in fact, a directory.
+	Name  string    // Path, including sub folders within the archive.
+	Size  int64     // Size of the file, in bytes. If not known upfront, then -1.
+	Time  time.Time // Timestamp, typically ModTime.
+	Index int       // Index within the archive. For Seek(), if it works.
+	IsDir bool      // If this is, in fact, a directory.
 }
 
 // The reader keeps the state of the archive stream.
@@ -30,26 +30,26 @@ type Reader interface {
 // If a cast to (reader).(SeekReader) succeeds, the underlying format
 // and the input stream support seeking (gleaned by internal casts made on it).
 type SeekReader interface {
-	List() []Header 				// Returns all headers, or nil if not supported.
-	Seek(i int, whence int) error 	// Seek to index. whence same meaning as in io.Seeker.
+	List() []Header               // Returns all headers, or nil if not supported.
+	Seek(i int, whence int) error // Seek to index. whence same meaning as in io.Seeker.
 }
 
 // *Opt configuration.
 type Options struct {
-	Name 		string	// Used as file path by dir format, otherwise informational.
-	Size 		int64	// Size of input stream. Providing helps stream become seekable.
-	MemLimitKiB	int		// Memory bound for solid blocks. When overstepped, seeking is disabled.
-	AllowDir	bool	// Allow opening of directories as "archive". Path in Name.
-	WantSeek	bool	// Seeking is preferred, otherwise prefers non-seeking handler.
-	SkipDirs	bool	// Next() will auto-skip over IsDir entries.
+	Name        string // Used as file path by dir format, otherwise informational.
+	Size        int64  // Size of input stream. Providing helps stream become seekable.
+	MemLimitKiB int    // Memory bound for solid blocks. When overstepped, seeking is disabled.
+	AllowDir    bool   // Allow opening of directories as "archive". Path in Name.
+	WantSeek    bool   // Seeking is preferred, otherwise prefers non-seeking handler.
+	SkipDirs    bool   // Next() will auto-skip over IsDir entries.
 }
 
 // Default options, if no other supplied.
 var DefaultOptions = Options{
 	MemLimitKiB: 512 * 1024,
-	AllowDir: true,
-	WantSeek: false,
-	SkipDirs: true,
+	AllowDir:    true,
+	WantSeek:    false,
+	SkipDirs:    true,
 }
 
 // A format is an individual driver to handle a file type.
@@ -150,4 +150,3 @@ func checkOpt(o *Options) Options {
 	}
 	return *o
 }
-

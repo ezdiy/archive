@@ -2,6 +2,7 @@
 
 // High level bindings for https://github.com/ebiggers/libdeflate
 package deflate
+
 /*
 #cgo CFLAGS: -Ilibdeflate -Ilibdeflate/lib -Ilibdeflate/common -O3 -fomit-frame-pointer
 #include "lib_common.h"
@@ -15,7 +16,7 @@ package deflate
 #define dispatch dispatch__
 #include "adler32.c"
 #include "x86/cpu_features.c"
- */
+*/
 import "C"
 import "unsafe"
 
@@ -25,9 +26,9 @@ func Compress(dst, input []byte, level int, zlib bool) []byte {
 	inLen := C.size_t(len(input))
 	outLen := int(C.libdeflate_zlib_compress_bound(comp, inLen))
 	if dst == nil {
-		dst = make([]byte, outLen+ len(dst))[:0]
+		dst = make([]byte, outLen+len(dst))[:0]
 	} else if outLen > cap(dst)-len(dst) {
-		newDst := make([]byte, outLen+ len(dst))
+		newDst := make([]byte, outLen+len(dst))
 		dst = newDst[:copy(newDst, dst)]
 	}
 	lendst := len(dst)
@@ -60,7 +61,7 @@ func Decompress(dst, input []byte, zlib bool) []byte {
 			result = C.libdeflate_deflate_decompress(decomp, unsafe.Pointer(&input[0]), inLen, unsafe.Pointer(&dst[lenDst]), outCap, &outLen)
 		}
 		if result == C.LIBDEFLATE_INSUFFICIENT_SPACE {
-			newDst := make([]byte, int(outLen) +lenDst)
+			newDst := make([]byte, int(outLen)+lenDst)
 			dst = newDst[:copy(newDst, dst)]
 			continue
 		} else if result != C.LIBDEFLATE_SUCCESS {
@@ -69,4 +70,3 @@ func Decompress(dst, input []byte, zlib bool) []byte {
 		return dst[:lenDst+int(outLen)]
 	}
 }
-

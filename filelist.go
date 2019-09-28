@@ -72,4 +72,3 @@ func (f *FileList) Seek(pos, whence int) error {
 	}
 	return nil
 }
-

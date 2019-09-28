@@ -10,7 +10,7 @@ import (
 
 type Reader struct {
 	archive.FileList
-	Name 	string
+	Name string
 }
 
 func (r *Reader) Next() (ret *archive.Header, err error) {
@@ -25,8 +25,7 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 	if (*input) != nil || !opt.AllowDir {
 		return nil, nil
 	}
-	r := Reader{
-	}
+	r := Reader{}
 	r.FileList.Closer = ioutil.NopCloser(nil)
 	r.SkipDirs = opt.SkipDirs
 	r.Name, e = filepath.Abs(opt.Name)
@@ -36,11 +35,11 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 		}
 		rPath, _ := filepath.Rel(r.Name, path)
 		r.FList = append(r.FList, archive.Header{
-			Name:filepath.ToSlash(rPath),
-			Size:info.Size(),
-			Time:info.ModTime(),
-			Index:len(r.FList),
-			IsDir:info.IsDir(),
+			Name:  filepath.ToSlash(rPath),
+			Size:  info.Size(),
+			Time:  info.ModTime(),
+			Index: len(r.FList),
+			IsDir: info.IsDir(),
 		})
 		return nil
 	})
@@ -53,4 +52,3 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 func init() {
 	archive.Formats = append(archive.Formats, Open)
 }
-

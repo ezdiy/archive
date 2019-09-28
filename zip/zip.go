@@ -34,11 +34,11 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 	if e != nil {
 		return nil, e
 	}
-	for i,v := range a.z.File {
+	for i, v := range a.z.File {
 		a.FList = append(a.FList, archive.Header{
-			Name:v.Name,
-			Size:int64(v.UncompressedSize64),
-			Time:v.Modified,
+			Name:  v.Name,
+			Size:  int64(v.UncompressedSize64),
+			Time:  v.Modified,
 			Index: i,
 			IsDir: false,
 		})

@@ -13,7 +13,7 @@ func TestLibarchOpen(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	var bigbuf [1024*1024]byte
+	var bigbuf [1024 * 1024]byte
 	for {
 		r, err := a.Next()
 		if err != nil {
@@ -25,4 +25,3 @@ func TestLibarchOpen(t *testing.T) {
 	}
 	_ = a.Close()
 }
-

@@ -20,4 +20,3 @@ func Test7z(t *testing.T) {
 	}
 	f.Close()
 }
-
