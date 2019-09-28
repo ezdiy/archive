@@ -70,7 +70,7 @@ var Formats []Format
 
 // Create a new reader for auto-detected archive on r.
 func NewReader(r io.Reader) (Reader, error) {
-	return nil, nil
+	return NewReaderOpt(r, nil)
 }
 
 // Create a new reader for auto-detected archive on r with options.

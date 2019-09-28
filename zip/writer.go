@@ -1,8 +1,5 @@
 package zip
 
-/*
-import "archive/zip"
-
 import (
 	"archive/zip"
 	"github.com/ezdiy/archive/deflate"
@@ -150,4 +147,3 @@ func (a *Writer) AddStream(name string, src io.Reader, t time.Time, comp bool) (
 	}
 	return io.Copy(fo, src)
 }
-*/
