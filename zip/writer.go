@@ -10,23 +10,23 @@ import (
 
 // Zip archive writer.
 type Writer struct {
-	zw *zip.Writer
-	of io.WriteCloser
+	ZWriter *zip.Writer
+	OutFile io.WriteCloser
 
-	buf []byte
+	buf     []byte
 	freeBuf []byte
 
-	Level int			// Compression level, 0-12 (libdeflate)
-	MinCompress int		// % by which the file must be shrunk in order to keep compression.
+	Level       int // Compression level, 0-12 (libdeflate)
+	MinCompress int // % by which the file must be shrunk in order to keep compression.
 }
 
 type writeOnClose struct {
-	a *Writer
-	w io.Writer
+	a   *Writer
+	w   io.Writer
 	buf []byte
 }
 
-func (w *writeOnClose) Write(b[]byte) (int,error) {
+func (w *writeOnClose) Write(b []byte) (int, error) {
 	return len(b), nil
 }
 
@@ -42,10 +42,10 @@ func (w *writeOnClose) Close() error {
 
 // Write zip file to given output stream ownership of will be taken.
 func NewCloseWriter(output io.WriteCloser) (a *Writer) {
-	a = &Writer{of:output}
-	a.zw = zip.NewWriter(a.of)
-	a.zw.RegisterCompressor(zip.Deflate, func(w io.Writer) (io.WriteCloser, error) {
-		return &writeOnClose{a,w, a.buf}, nil
+	a = &Writer{OutFile: output}
+	a.ZWriter = zip.NewWriter(a.OutFile)
+	a.ZWriter.RegisterCompressor(zip.Deflate, func(w io.Writer) (io.WriteCloser, error) {
+		return &writeOnClose{a, w, a.buf}, nil
 	})
 	return
 }
@@ -53,6 +53,7 @@ func NewCloseWriter(output io.WriteCloser) (a *Writer) {
 type nopCloser struct {
 	io.Writer
 }
+
 func (n *nopCloser) Close() error {
 	return nil
 }
@@ -74,18 +75,18 @@ func CreateFile(file string) (*Writer, error) {
 
 // Flush the compressed data and close (depending on open type) the finished archive.
 func (a *Writer) Close() {
-	_ = a.zw.Close()
-	_ = a.of.Close()
+	_ = a.ZWriter.Close()
+	_ = a.OutFile.Close()
 }
 
 // Quick-add a file from buffer, timestamp is current time, default compression is used.
 func (a *Writer) Add(name string, buffer []byte) (cs int) {
-	return a.AddLevel(name,buffer,time.Now(),-1)
+	return a.AddLevel(name, buffer, time.Now(), -1)
 }
 
 // Add a file name from buffer with timestamp t. Use compression level (0 = store method).
 // Returns compressed size.
-func (a *Writer) AddLevel(name string, buffer[]byte, t time.Time, level int) (cs int) {
+func (a *Writer) AddLevel(name string, buffer []byte, t time.Time, level int) (cs int) {
 	if level == -1 {
 		level = a.Level
 	}
@@ -107,11 +108,11 @@ func (a *Writer) AddLevel(name string, buffer[]byte, t time.Time, level int) (cs
 		method = zip.Deflate
 	}
 	h := &zip.FileHeader{
-		Name:name,
-		Method:method,
-		Modified:t,
+		Name:     name,
+		Method:   method,
+		Modified: t,
 	}
-	fo, err := a.zw.CreateHeader(h)
+	fo, err := a.ZWriter.CreateHeader(h)
 	if err != nil {
 		return -1
 	}
@@ -132,11 +133,11 @@ func (a *Writer) AddWriter(name string, t time.Time, comp bool) (io.Writer, erro
 		method = zip.Store
 	}
 	h := &zip.FileHeader{
-		Name:name,
-		Method:method,
-		Modified:t,
+		Name:     name,
+		Method:   method,
+		Modified: t,
 	}
-	return a.zw.CreateHeader(h)
+	return a.ZWriter.CreateHeader(h)
 }
 
 // Add a file, contents read from given source stream.
