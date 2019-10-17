@@ -74,9 +74,10 @@ func CreateFile(file string) (*Writer, error) {
 }
 
 // Flush the compressed data and close (depending on open type) the finished archive.
-func (a *Writer) Close() {
+func (a *Writer) Close() error {
 	_ = a.ZWriter.Close()
 	_ = a.OutFile.Close()
+	return nil
 }
 
 // Quick-add a file from buffer, timestamp is current time, default compression is used.

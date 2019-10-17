@@ -35,6 +35,9 @@ func Open(input *io.Reader, opt *archive.Options) (ret archive.Reader, e error) 
 		return nil, e
 	}
 	for i, v := range a.z.File {
+		if v.Method != zip.Store && v.Method != zip.Deflate {
+			return nil, nil
+		}
 		a.FList = append(a.FList, archive.Header{
 			Name:  v.Name,
 			Size:  int64(v.UncompressedSize64),

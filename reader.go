@@ -80,6 +80,9 @@ func NewReaderOpt(r io.Reader, opt *Options) (res Reader, err error) {
 		if res, err = f(&r, &o); res != nil || err != nil {
 			break
 		}
+		if rs, ok := r.(io.Seeker); ok {
+			rs.Seek(0, io.SeekStart)
+		}
 	}
 	return
 }

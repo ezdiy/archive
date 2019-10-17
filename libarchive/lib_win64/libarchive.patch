@@ -112,3 +112,15 @@ index 061ad630..57205675 100644
  ENDIF(BZIP2_FOUND)
  MARK_AS_ADVANCED(CLEAR BZIP2_INCLUDE_DIR)
  MARK_AS_ADVANCED(CLEAR BZIP2_LIBRARIES)
+diff --git a/libarchive/archive_read_support_format_zip.c b/libarchive/archive_read_support_format_zip.c
+index 9934bf15..d0422409 100644
+--- a/libarchive/archive_read_support_format_zip.c
++++ b/libarchive/archive_read_support_format_zip.c
+@@ -1797,6 +1797,7 @@ zip_read_data_zipx_lzma_alone(struct archive_read *a, const void **buff,
+ 			    "lzma data error (error %d)", (int) lz_ret);
+ 			return (ARCHIVE_FATAL);
+ 
++		case LZMA_STREAM_END:
+ 		case LZMA_OK:
+ 			break;
+ 
