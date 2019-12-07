@@ -1,12 +1,12 @@
 [submodule "rar/dmc_unrar"]
-	path = rar/dmc_unrar
+	path = rar/vendor/dmc_unrar
 	url = https://github.com/DrMcCoy/dmc_unrar
 	branch = master
 [submodule "deflate/libdeflate"]
-	path = deflate/libdeflate
+	path = deflate/vendor/libdeflate
 	url = https://github.com/ebiggers/libdeflate
 	branch = master
 [submodule "sevenzip/7z"]
-	path = sevenzip/7z
+	path = sevenzip/vendor/7z
 	url = https://github.com/kornelski/7z.git
 	branch = master
